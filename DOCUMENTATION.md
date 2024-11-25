@@ -3,15 +3,17 @@
 ## Approach
 In this task, I took a piece-by-piece approach. I first made a primary outline for both backends and frontends, in each way. For example, I made sure that the FastAPI backend was in place to transport the medicines and the JavaScript frontend was used to show the data and find the average price of a medicine.
 
-Backend:
-I constructed the server with FastAPI which would take charge of the CRUD operations (Create, Read, Update, Delete) for medicine inventory.The information was kept intact in a JSON file (data.json) whereas FastAPI’s Form was employed to send messages via HTTP (POST) requests with medicine data embedded in them.Regarding the GET requests, I made sure that the backend sent back all the medicines or the specific medicine according to the name provided.
+Backend
+I constructed the server with FastAPI which would take charge of the CRUD operations (Create, Read, Update, Delete) for medicine inventory. The information was kept intact in a JSON file (data.json), whereas FastAPI’s Form was employed to send messages via HTTP (POST) requests with medicine data embedded in them. Regarding the GET requests, I made sure that the backend sent back all the medicines or the specific medicine according to the name provided.
 
-Frontend:
-I ran the FastAPI backend in JavaScript and pulled out the medicines and then after handling the data I displayed it in the list of fetch() API.In addition, the price of the medicines was calculated dynamically by using JavaScript and shown in the header.
+Frontend
+I ran the FastAPI backend in JavaScript and pulled out the medicines, and after handling the data, I displayed it in the list using the fetch() API. In addition, the price of the medicines was calculated dynamically using JavaScript and shown in the header.
+
+Additionally, a form was implemented in the frontend to allow users to add new medicines. This form collected the medicine's name and price, sent the data to the backend using a POST request, and displayed a confirmation message upon successful submission. This functionality made the frontend interactive and user-friendly, ensuring seamless communication with the backend.
 
 
 ## Objectives - Innovative Solutions
-1. Fetching Data from Backend and Displaying It
+### 1. Fetching Data from Backend and Displaying It
 What Happens:
 
 The frontend requests data from the backend (API).
@@ -22,25 +24,24 @@ Make a GET request to fetch medicines.
 Show the medicines (name and price) in a list on the page.
 Code Example:
 
-javascript
-Copy code
-// Fetch the medicines data
-fetch('http://localhost:8000/medicines')
-    .then(response => response.json())
-    .then(data => {
-        displayMedicines(data); // Call function to show medicines
-    })
-    .catch(error => console.log("Error fetching data:", error));
+        // Fetch the medicines data
+        fetch('http://localhost:8000/medicines')
+            .then(response => response.json())
+            .then(data => {
+                displayMedicines(data); // Call function to show medicines
+            })
+            .catch(error => console.log("Error fetching data:", error));
 
-function displayMedicines(data) {
-    const medicineList = document.getElementById('medicine-list');
-    data.medicines.forEach(medicine => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${medicine.name}: $${medicine.price}`;
-        medicineList.appendChild(listItem);
-    });
-}
-2. Handling Missing or Invalid Data
+        function displayMedicines(data) {
+            const medicineList = document.getElementById('medicine-list');
+            data.medicines.forEach(medicine => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${medicine.name}: $${medicine.price}`;
+                medicineList.appendChild(listItem);
+            });
+        }
+
+### 2. Handling Missing or Invalid Data
 What Happens:
 
 If the data has missing or invalid fields (like empty name or price), the frontend shows a warning instead of crashing.
@@ -50,23 +51,23 @@ Check if the name and price are valid for each medicine.
 If something is missing or incorrect, show an error message.
 Code Example:
 
-javascript
-Copy code
-function displayMedicines(data) {
-    const medicineList = document.getElementById('medicine-list');
-    data.medicines.forEach(medicine => {
-        if (!medicine.name || !medicine.price) {
-            const errorItem = document.createElement('li');
-            errorItem.textContent = "Invalid or missing data.";
-            medicineList.appendChild(errorItem);
-        } else {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${medicine.name}: $${medicine.price}`;
-            medicineList.appendChild(listItem);
+
+        function displayMedicines(data) {
+            const medicineList = document.getElementById('medicine-list');
+            data.medicines.forEach(medicine => {
+                if (!medicine.name || !medicine.price) {
+                    const errorItem = document.createElement('li');
+                    errorItem.textContent = "Invalid or missing data.";
+                    medicineList.appendChild(errorItem);
+                } else {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${medicine.name}: $${medicine.price}`;
+                    medicineList.appendChild(listItem);
+                }
+            });
         }
-    });
-}
-3. Sending Data to the Backend (User-Friendly)
+
+### 3. Sending Data to the Backend (User-Friendly)
 What Happens:
 
 The frontend allows users to add a new medicine (name and price) through a form.
@@ -80,40 +81,39 @@ Code Example:
 
 HTML Form:
 
-html
-Copy code
-<form id="medicine-form">
-    <label for="name">Medicine Name:</label>
-    <input type="text" id="name" required><br>
-    <label for="price">Price:</label>
-    <input type="number" id="price" required><br>
-    <button type="submit">Add Medicine</button>
-</form>
+
+        <form id="medicine-form">
+            <label for="name">Medicine Name:</label>
+            <input type="text" id="name" required><br>
+            <label for="price">Price:</label>
+            <input type="number" id="price" required><br>
+            <button type="submit">Add Medicine</button>
+        </form>
+
 JavaScript for Form Submission:
 
-javascript
-Copy code
-const form = document.getElementById('medicine-form');
-form.addEventListener('submit', function(event) {
-    event.preventDefault();
+        const form = document.getElementById('medicine-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-    const name = document.getElementById('name').value;
-    const price = document.getElementById('price').value;
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
 
-    fetch('http://localhost:8000/create', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: name, price: price }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message); // Show success message
-    })
-    .catch(error => console.log('Error:', error));
-});
-4. Improving Design and User Experience (UX)
+            fetch('http://localhost:8000/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: name, price: price }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // Show success message
+            })
+            .catch(error => console.log('Error:', error));
+        });
+
+### 4. Improving Design and User Experience (UX)
 What Happens:
 
 We improve the design to make the page look better and easier to use.
@@ -125,54 +125,54 @@ Add hover effects to buttons for better interaction.
 Optionally, show a loading spinner while fetching data or submitting a form.
 Code Example:
 
-css
-Copy code
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-}
 
-.container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
 
-input, button {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-}
+        input, button {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
 
-@media screen and (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
+        button:hover {
+            background-color: #45a049;
+        }
 
-    form {
-        width: 100%;
-    }
-}
-5. API and Frontend Documentation
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            form {
+                width: 100%;
+            }
+        }
+
+### 5. API and Frontend Documentation
 API Endpoints:
 
 GET /medicines: Fetches a list of medicines (name and price).
